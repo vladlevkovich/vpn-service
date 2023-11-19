@@ -3,6 +3,5 @@ from .views import *
 
 urlpatterns = [
     path('sites/', SitesList.as_view()),
-    path('traffic/', TrafficSite.as_view()),
     path('proxy/<uuid:site_id>/', ProxySite.as_view())
 ]

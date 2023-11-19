@@ -12,15 +12,13 @@ class SitesList(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = CreateSiteSerializer
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'sites.html'
 
     def get(self, request):
         try:
             user_profile = Profile.objects.get(user=request.user)
             sites = Site.objects.filter(user=user_profile)
-            # serializer = self.serializer_class(sites, many=True)
-            return Response({'sites': sites}, status=status.HTTP_200_OK)
-            # return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = self.serializer_class(sites, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Profile.DoesNotExist:
             return Response({'message': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -30,26 +28,6 @@ class SitesList(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user_profile)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class SiteDetail(GenericAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'site_detail.html'
-
-    def get(self, request):
-        pass
-
-
-class TrafficSite(GenericAPIView):
-    serializer_class = TrafficSiteSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        user = request.user
-        traffic_site = TrafficStatic.objects.get(user=user)
-        serializer = self.serializer_class(traffic_site, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ProxySite(views.APIView):

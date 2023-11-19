@@ -29,17 +29,3 @@ class UserProfile(GenericAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Profile.DoesNotExist:
             return Response({'message': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
-
-
-class ProfilesList(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'vpn.html'
-
-    def get(self, request):
-        user = request.user
-        try:
-            profile = get_object_or_404(Profile, user=user)
-            return Response({'profile': profile})
-        except Profile.DoesNotExist:
-            return Response({'error_message': 'Profile not found'}, status=status.HTTP_404_NOT_FOUND)
